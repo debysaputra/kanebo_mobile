@@ -1,4 +1,4 @@
-package com.kanebo.kanebo_mobile
+package com.kanebo.money
 
 import io.flutter.embedding.android.FlutterActivity
 

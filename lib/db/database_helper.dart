@@ -200,4 +200,14 @@ class DB {
     await _db?.close();
     _db = null;
   }
+
+  /// Hapus semua data & file DB, lalu re-init dengan seed default.
+  Future<void> reset() async {
+    await _db?.close();
+    _db = null;
+    final dbPath = await getDatabasesPath();
+    final path = p.join(dbPath, _dbName);
+    await deleteDatabase(path);
+    _db = await _open();
+  }
 }

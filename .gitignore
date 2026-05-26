@@ -22,6 +22,11 @@ android/app/debug
 android/app/profile
 android/app/release
 
+# Keystore (JANGAN commit!)
+*.jks
+*.keystore
+keystore/
+
 # iOS
 ios/Pods/
 ios/.symlinks/

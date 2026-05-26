@@ -6,6 +6,7 @@ import '../budgets/budgets_screen.dart';
 import '../categories/categories_screen.dart';
 import '../debts/debts_screen.dart';
 import '../goals/goals_screen.dart';
+import '../settings/settings_screen.dart';
 
 class MoreScreen extends StatelessWidget {
   const MoreScreen({super.key});
@@ -57,6 +58,15 @@ class MoreScreen extends StatelessWidget {
           colors: [Color(0xFF3B82F6), Color(0xFF6366F1)],
         ),
         builder: () => const DebtsScreen(),
+      ),
+      _MoreItem(
+        emoji: '⚙️',
+        title: 'Pengaturan',
+        subtitle: 'Reset data & info aplikasi',
+        gradient: const LinearGradient(
+          colors: [Color(0xFF6B6480), Color(0xFF1F1633)],
+        ),
+        builder: () => const SettingsScreen(),
       ),
     ];
 
