@@ -10,12 +10,15 @@ import 'providers/debt_provider.dart';
 import 'providers/goal_provider.dart';
 import 'providers/transaction_provider.dart';
 import 'screens/shell/app_shell.dart';
+import 'services/ad_service.dart';
 import 'theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('id_ID', null);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  // Inisialisasi AdMob di background; jangan blokir tampilnya UI.
+  AdService.instance.init();
   runApp(const KaneboApp());
 }
 

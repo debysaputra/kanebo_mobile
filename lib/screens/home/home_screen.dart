@@ -6,6 +6,7 @@ import '../../providers/category_provider.dart';
 import '../../providers/transaction_provider.dart';
 import '../../theme/app_colors.dart';
 import '../../utils/format.dart';
+import '../../widgets/ads/banner_ad_widget.dart';
 import '../accounts/account_form_screen.dart';
 import '../transactions/transactions_screen.dart';
 import 'widgets/account_card.dart';
@@ -20,36 +21,45 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: RefreshIndicator(
-          color: AppColors.primary,
-          onRefresh: () async {
-            await Future.wait([
-              context.read<AccountProvider>().load(),
-              context.read<TransactionProvider>().load(),
-              context.read<CategoryProvider>().load(),
-            ]);
-          },
-          child: ListView(
-            padding: const EdgeInsets.only(bottom: 100),
-            physics: const AlwaysScrollableScrollPhysics(),
-            children: const [
-              _Greeting(),
-              SizedBox(height: 8),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: BalanceCard(),
+        child: Column(
+          children: [
+            Expanded(
+              child: RefreshIndicator(
+                color: AppColors.primary,
+                onRefresh: () async {
+                  await Future.wait([
+                    context.read<AccountProvider>().load(),
+                    context.read<TransactionProvider>().load(),
+                    context.read<CategoryProvider>().load(),
+                  ]);
+                },
+                child: ListView(
+                  padding: const EdgeInsets.only(bottom: 100),
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  children: const [
+                    _Greeting(),
+                    SizedBox(height: 8),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: BalanceCard(),
+                    ),
+                    SizedBox(height: 16),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: QuickStats(),
+                    ),
+                    SizedBox(height: 4),
+                    _AccountsSection(),
+                    SizedBox(height: 4),
+                    _RecentSection(),
+                  ],
+                ),
               ),
-              SizedBox(height: 16),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: QuickStats(),
-              ),
-              SizedBox(height: 4),
-              _AccountsSection(),
-              SizedBox(height: 4),
-              _RecentSection(),
-            ],
-          ),
+            ),
+            // Banner kecil di bawah; tidak menutupi konten & hilang sendiri
+            // bila iklan gagal dimuat.
+            if (adsSupported) const BannerAdWidget(),
+          ],
         ),
       ),
     );

@@ -3,8 +3,11 @@ import 'package:provider/provider.dart';
 
 import '../../models/transaction.dart';
 import '../../providers/transaction_provider.dart';
+import '../../services/ad_config.dart';
 import '../../theme/app_colors.dart';
 import '../../utils/format.dart';
+import '../../widgets/ads/banner_ad_widget.dart';
+import '../../widgets/ads/native_ad_card.dart';
 import '../../widgets/empty_state.dart';
 import '../home/widgets/recent_transactions.dart';
 import 'transaction_form_screen.dart';
@@ -81,16 +84,39 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.only(bottom: 100),
-                itemCount: grouped.length,
+                itemCount: _rowCount(grouped.length),
                 itemBuilder: (_, i) {
-                  final day = grouped[i];
+                  final groupIndex = _groupIndexForRow(i);
+                  if (groupIndex == null) {
+                    return const NativeAdCard(); // slot iklan
+                  }
+                  final day = grouped[groupIndex];
                   return _DaySection(day: day.day, items: day.items);
                 },
               ),
             ),
         ],
       ),
+      // Banner kecil di bawah daftar.
+      bottomNavigationBar:
+          adsSupported ? const SafeArea(child: BannerAdWidget()) : null,
     );
+  }
+
+  // Pola baris daftar: setiap [nativeAdEveryNItems] grup hari, sisipkan 1 baris
+  // iklan native. Tidak ada iklan di paling akhir agar tidak mengganjal.
+  int _rowCount(int groups) {
+    if (groups == 0) return 0;
+    final ads = (groups - 1) ~/ AdConfig.nativeAdEveryNItems;
+    return groups + ads;
+  }
+
+  /// Mengembalikan index grup untuk sebuah baris, atau `null` bila baris iklan.
+  int? _groupIndexForRow(int row) {
+    final block = AdConfig.nativeAdEveryNItems + 1;
+    final posInBlock = row % block;
+    if (posInBlock == AdConfig.nativeAdEveryNItems) return null;
+    return (row ~/ block) * AdConfig.nativeAdEveryNItems + posInBlock;
   }
 
   List<_DayGroup> _groupByDay(List<Txn> items) {

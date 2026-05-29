@@ -7,6 +7,7 @@ import '../../models/transaction.dart';
 import '../../providers/account_provider.dart';
 import '../../providers/category_provider.dart';
 import '../../providers/transaction_provider.dart';
+import '../../services/ad_service.dart';
 import '../../theme/app_colors.dart';
 import '../../utils/format.dart';
 import '../../widgets/confirm_dialog.dart';
@@ -121,6 +122,9 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
       );
     }
     if (mounted) Navigator.pop(context);
+    // Sesekali tampilkan interstitial (default tiap 5x simpan). Dipanggil
+    // setelah pop agar tidak mengganggu alur input.
+    AdService.instance.registerSaveAndMaybeShowInterstitial();
   }
 
   Future<void> _delete() async {

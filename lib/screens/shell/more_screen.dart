@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../services/ad_service.dart';
 import '../../theme/app_colors.dart';
 import '../accounts/accounts_screen.dart';
 import '../budgets/budgets_screen.dart';
@@ -68,6 +69,15 @@ class MoreScreen extends StatelessWidget {
         ),
         builder: () => const SettingsScreen(),
       ),
+      _MoreItem(
+        emoji: '❤️',
+        title: 'Dukung Pengembang',
+        subtitle: 'Tonton 1 iklan singkat — sepenuhnya opsional',
+        gradient: const LinearGradient(
+          colors: [Color(0xFFEF4444), Color(0xFFF97316)],
+        ),
+        onTap: (ctx) => _watchSupportAd(ctx),
+      ),
     ];
 
     return Scaffold(
@@ -82,6 +92,24 @@ class MoreScreen extends StatelessWidget {
       ),
     );
   }
+
+  static void _watchSupportAd(BuildContext context) {
+    final messenger = ScaffoldMessenger.of(context);
+    final shown = AdService.instance.showRewarded(
+      onReward: () {
+        messenger.showSnackBar(
+          const SnackBar(content: Text('Terima kasih atas dukunganmu! 💛')),
+        );
+      },
+    );
+    if (!shown) {
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('Iklan belum siap, coba lagi sebentar lagi.'),
+        ),
+      );
+    }
+  }
 }
 
 class _MoreItem {
@@ -89,14 +117,18 @@ class _MoreItem {
   final String title;
   final String subtitle;
   final Gradient gradient;
-  final Widget Function() builder;
+
+  /// Salah satu dari [builder] (navigasi ke layar) atau [onTap] (aksi kustom).
+  final Widget Function()? builder;
+  final void Function(BuildContext context)? onTap;
 
   _MoreItem({
     required this.emoji,
     required this.title,
     required this.subtitle,
     required this.gradient,
-    required this.builder,
+    this.builder,
+    this.onTap,
   });
 }
 
@@ -111,10 +143,16 @@ class _MoreCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => item.builder()),
-        ),
+        onTap: () {
+          if (item.onTap != null) {
+            item.onTap!(context);
+          } else if (item.builder != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => item.builder!()),
+            );
+          }
+        },
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
