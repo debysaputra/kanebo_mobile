@@ -5,6 +5,7 @@ import '../../providers/account_provider.dart';
 import '../../providers/category_provider.dart';
 import '../../providers/transaction_provider.dart';
 import '../../theme/app_colors.dart';
+import '../../services/ad_config.dart';
 import '../../utils/format.dart';
 import '../../widgets/ads/banner_ad_widget.dart';
 import '../accounts/account_form_screen.dart';
@@ -58,7 +59,7 @@ class HomeScreen extends StatelessWidget {
             ),
             // Banner kecil di bawah; tidak menutupi konten & hilang sendiri
             // bila iklan gagal dimuat.
-            if (adsSupported) const BannerAdWidget(),
+            if (AdConfig.enableBanner && adsSupported) const BannerAdWidget(),
           ],
         ),
       ),

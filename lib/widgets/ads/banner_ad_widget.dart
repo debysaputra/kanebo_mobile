@@ -27,7 +27,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   Future<void> _load() async {
     final width = MediaQuery.of(context).size.width.truncate();
-    final size = await AdSize.getAnchoredAdaptiveBannerAdSize(
+    final size = await AdSize.getLargeAnchoredAdaptiveBannerAdSizeWithOrientation(
       Orientation.portrait,
       width,
     );

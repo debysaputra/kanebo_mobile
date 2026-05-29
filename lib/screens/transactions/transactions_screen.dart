@@ -84,8 +84,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.only(bottom: 100),
-                itemCount: _rowCount(grouped.length),
+                itemCount: AdConfig.enableNativeInList
+                    ? _rowCount(grouped.length)
+                    : grouped.length,
                 itemBuilder: (_, i) {
+                  if (!AdConfig.enableNativeInList) {
+                    final day = grouped[i];
+                    return _DaySection(day: day.day, items: day.items);
+                  }
                   final groupIndex = _groupIndexForRow(i);
                   if (groupIndex == null) {
                     return const NativeAdCard(); // slot iklan
@@ -98,8 +104,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         ],
       ),
       // Banner kecil di bawah daftar.
-      bottomNavigationBar:
-          adsSupported ? const SafeArea(child: BannerAdWidget()) : null,
+      bottomNavigationBar: (AdConfig.enableBanner && adsSupported)
+          ? const SafeArea(child: BannerAdWidget())
+          : null,
     );
   }
 
@@ -113,7 +120,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   /// Mengembalikan index grup untuk sebuah baris, atau `null` bila baris iklan.
   int? _groupIndexForRow(int row) {
-    final block = AdConfig.nativeAdEveryNItems + 1;
+    const block = AdConfig.nativeAdEveryNItems + 1;
     final posInBlock = row % block;
     if (posInBlock == AdConfig.nativeAdEveryNItems) return null;
     return (row ~/ block) * AdConfig.nativeAdEveryNItems + posInBlock;

@@ -13,6 +13,13 @@ import 'package:flutter/foundation.dart';
 class AdConfig {
   AdConfig._();
 
+  // --- Saklar format iklan (mudah dihidupkan lagi nanti) ---
+  // Untuk sekarang HANYA banner yang aktif agar tidak mengganggu user.
+  static const bool enableBanner = true;
+  static const bool enableNativeInList = false;
+  static const bool enableInterstitial = false;
+  static const bool enableRewarded = false;
+
   /// Paksa selalu pakai ID test Google walau di build release.
   /// Biarkan `false`: debug otomatis pakai test, release pakai ID produksi.
   static const bool forceTestAds = false;

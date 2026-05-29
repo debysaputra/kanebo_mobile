@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../services/ad_config.dart';
 import '../../services/ad_service.dart';
 import '../../theme/app_colors.dart';
 import '../accounts/accounts_screen.dart';
@@ -69,15 +70,16 @@ class MoreScreen extends StatelessWidget {
         ),
         builder: () => const SettingsScreen(),
       ),
-      _MoreItem(
-        emoji: '❤️',
-        title: 'Dukung Pengembang',
-        subtitle: 'Tonton 1 iklan singkat — sepenuhnya opsional',
-        gradient: const LinearGradient(
-          colors: [Color(0xFFEF4444), Color(0xFFF97316)],
+      if (AdConfig.enableRewarded)
+        _MoreItem(
+          emoji: '❤️',
+          title: 'Dukung Pengembang',
+          subtitle: 'Tonton 1 iklan singkat — sepenuhnya opsional',
+          gradient: const LinearGradient(
+            colors: [Color(0xFFEF4444), Color(0xFFF97316)],
+          ),
+          onTap: (ctx) => _watchSupportAd(ctx),
         ),
-        onTap: (ctx) => _watchSupportAd(ctx),
-      ),
     ];
 
     return Scaffold(

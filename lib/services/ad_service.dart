@@ -26,8 +26,8 @@ class AdService {
     if (_initialized) return;
     _initialized = true;
     await MobileAds.instance.initialize();
-    _loadInterstitial();
-    _loadRewarded();
+    if (AdConfig.enableInterstitial) _loadInterstitial();
+    if (AdConfig.enableRewarded) _loadRewarded();
   }
 
   // ---------------------------------------------------------------------------
@@ -68,6 +68,7 @@ class AdService {
   /// Catat satu kali simpan transaksi; tampilkan interstitial bila sudah
   /// mencapai kelipatan [AdConfig.interstitialEveryNSaves] dan iklan siap.
   void registerSaveAndMaybeShowInterstitial() {
+    if (!AdConfig.enableInterstitial) return;
     _saveCounter++;
     if (_saveCounter % AdConfig.interstitialEveryNSaves != 0) return;
     final ad = _interstitial;
